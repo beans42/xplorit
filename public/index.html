@@ -70,6 +70,9 @@
 		</ion-app>
 		
 		<script>
+			if(!(/Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)))
+				alert("For best experience use a mobile device with built-in GPS.");
+
 			function send() {
 				if (navigator.geolocation)
 					navigator.geolocation.getCurrentPosition(actually_send);

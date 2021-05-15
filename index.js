@@ -163,7 +163,7 @@ app.get('/add-points', (req, res) => {
 });
 
 app.get('/leaderboard', (req, res) => {
-	let leaderboard = leaderboards.slice(0, 9);
+	let leaderboard = leaderboards.slice(0, 10);
 	leaderboard.forEach((item, index) => item.idx = '#' + (index + 1));
 	res.render('leaderboard', { leaderboard });
 });

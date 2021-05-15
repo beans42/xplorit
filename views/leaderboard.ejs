@@ -41,6 +41,9 @@
 				</ion-header>
 
 				<ion-list>
+					<ion-list-header>
+						Top 10 players
+					</ion-list-header>
 					<% for (let i = 0; i < leaderboard.length; i++) { %>
 						<ion-item>
 							<h1 slot="start"><%= leaderboard[i].idx %></h2>
