@@ -51,20 +51,6 @@ function calc_distance(start, dest) { //meters
 
 io.on('connection', socket => {
 	let session_id = '';
-	let interval;
-	interval = setInterval(() => {
-		if (!session_id || !session_map.has(session_id))
-			return;
-		let session = session_map.get(session_id);
-		session.time -= 1;
-
-		session_map.set(session_id, session);
-		socket.emit("time update", { time: session.time });
-		if (session.time <= 0) {
-			clearInterval(interval);
-			socket.emit("lost");
-		}
-	}, 1000);
 
 	socket.on('join room', data => {
 		session_id = data.session_id;
@@ -83,7 +69,7 @@ io.on('connection', socket => {
 		const target = session.target;
 		const distance = calc_distance(pos, target);
 		if (distance < 25 && session.time > 0) {
-			socket.emit("victory", { points: (1/(session.time_og - session.time)) * 10 * session.radius });
+			socket.emit('victory', { points: (1/(session.time_og - session.time)) * 10 * session.radius });
 		}
 	});
 
@@ -96,6 +82,18 @@ io.on('connection', socket => {
 		console.log('socket', socket.id, 'left room', session_id);
 	});
 });
+
+setInterval(() => {
+	session_map.forEach((val, key) => {
+		val.time -= 1;
+		io.to(key).emit('time update', { time: val.time });
+		if (val.time <= 0) {
+			io.to(key).emit('lost');
+			session_map.delete(key);
+			console.log('deleted session', key);
+		}
+	});
+}, 1000);
 
 app.get('/create-room', (req, res) => {
 	if (!('radius' in req.query) || !('time' in req.query) || !('latitude' in req.query) || !('longitude' in req.query)) {
