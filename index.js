@@ -101,7 +101,6 @@ app.get('/create-room', (req, res) => {
 		return;
 	}
 	let { radius, time, latitude, longitude } = req.query;
-	radius *= 1000;
 	let session_id;
 	do
 	session_id = generate_code(6);

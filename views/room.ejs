@@ -19,10 +19,9 @@
 		<meta name="apple-mobile-web-app-title" content="xplorit" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/core.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/normalize.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/structure.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/typography.css" rel="stylesheet">
+		<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+		<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"/>
 		<link href="css/variables.css" rel="stylesheet">
 
 		<style>
@@ -65,7 +64,11 @@
 					<img src="/img/arrow.png" style="z-index: 2"/>
 					<img id="needle" src="/img/needle.png" style="z-index: 3"/>
 				</div>
-				<ion-button id="help_button" onclick="help()" hidden>help</ion-button>
+				<p>
+					The faster you reach your secret destination the more points you will receive!
+					The more points you have the higher up you will be on the leaderboards.
+					Stay safe and have fun!
+				</p>
 			</ion-content>
 
 			<ion-footer>
@@ -84,7 +87,6 @@
 				</ion-grid>
 			</ion-footer>
 		</ion-app>
-		<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
 			const target = { longitude: parseFloat(<%= target.longitude %>), latitude: parseFloat(<%= target.latitude %>) };
@@ -96,12 +98,7 @@
 			let compass_holder = document.getElementById("holder");
 			let compass_circle = document.getElementById("spinny");
 			let compass_needle = document.getElementById("needle");
-			let help_button = document.getElementById("help_button");
 			socket.emit("join room", { session_id: '<%= session_id %>' });
-
-			function help() {
-				alert("The faster you reach your secret destination the more points you will receive! The more points you have the higher up you will be on the leaderboards. Stay safe and have fun!");
-			}
 
 			const deg2rad = Math.PI / 180;
 	
@@ -159,7 +156,6 @@
 				} else
 					window.addEventListener("deviceorientationabsolute", compass_handler, true);
 				compass_holder.hidden = !compass_holder.hidden;
-				help_button.hidden = !help_button.hidden;
 			}
 	
 			socket.on("time update", ({ time }) => {

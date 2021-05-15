@@ -19,10 +19,9 @@
 		<meta name="apple-mobile-web-app-title" content="xplorit" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/core.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/normalize.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/structure.css" rel="stylesheet">
-		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/typography.css" rel="stylesheet">
+		<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+		<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"/>
 		<link href="css/variables.css" rel="stylesheet">
 	</head>
 
@@ -45,20 +44,28 @@
 
 				<ion-label class="ion-text-center">
 					<ion-text>
-						<h1>How far are you willing to go? (km)</h3>
+						<h1>How far are you willing to go? (meters)</h3>
 					</ion-text>
 				</ion-label>
-				<ion-range id="distance" min=0.5 max=5 step=0.5 snaps pin></ion-range>
+				<ion-range id="distance" min=500 max=5000 step=500 snaps pin></ion-range>
 			
 				<ion-label class="ion-text-center">
 					<ion-text>
-						<h1>Set a time limit (minutes).</h3>
+						<h1>In how long? (minutes)</h3>
 					</ion-text>
 				</ion-label>
 				<ion-range id="time" min=5 max=60 step=5 snaps pin></ion-range>
-			
-				<ion-button expand="block" onclick="send()">continue</ion-button>
-				<ion-button onclick="window.location.replace('/leaderboard')">leaderboards</ion-button>
+
+				<ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-button expand="block" onclick="send()">continue</ion-button>
+						</ion-col>
+						<ion-col>
+							<ion-button expand="block" onclick="window.location.replace('/leaderboard')">leaderboards</ion-button>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
 			</ion-content>
 		</ion-app>
 		
@@ -74,5 +81,4 @@
 			}
 		</script>
 	</body>
-	<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
 </html>
