@@ -3,7 +3,6 @@ const express = require('express');
 const https = require('https');
 const socket = require('socket.io');
 const crypto = require('crypto');
-const { Session } = require('inspector');
 
 const port = 443;
 const ssl_options = {
@@ -145,17 +144,21 @@ app.get('/victory', (req, res) => {
 });
 
 app.get('/add-points', (req, res) => {
-	if (!('points' in req.query) || !('nick' in req.query)) {
+	if (!('points' in req.query) || !('nick' in req.query) || !('code' in req.query)) {
 		res.redirect('/invalid-page.html');
 		return;
 	}
-	let { points, nick } = req.query;
+	let { points, nick, code } = req.query;
 	points = parseInt(points);
-	leaderboards.push(req.query);
+	const index = leaderboards.findIndex((e) => e.nick === nick);
+	if (index != -1) {
+		if (code === leaderboards[index].code)
+			leaderboards[index].points += points;
+	} else leaderboards.push({ points, nick, code });
 	leaderboards.sort((a, b) => {
-		if (a.points < b.points)
-			return -1;
 		if (a.points > b.points)
+			return -1;
+		if (a.points < b.points)
 			return 1;
 		return 0;
 	});
@@ -163,7 +166,8 @@ app.get('/add-points', (req, res) => {
 });
 
 app.get('/leaderboard', (req, res) => {
-	const leaderboard = leaderboards.slice(0, 9);
+	let leaderboard = leaderboards.slice(0, 9);
+	leaderboard.forEach((item, index) => item.idx = '#' + (index + 1));
 	res.render('leaderboard', { leaderboard });
 });
 

@@ -44,6 +44,7 @@
 				<ion-list>
 					<% for (let i = 0; i < leaderboard.length; i++) { %>
 						<ion-item>
+							<h1 slot="start"><%= leaderboard[i].idx %></h2>
 							<ion-label>
 								<h2><%= leaderboard[i].nick %></h2>
 								<h3><%= leaderboard[i].points %></h3>

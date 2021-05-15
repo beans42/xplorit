@@ -54,12 +54,17 @@
 				</ion-text>
 
 				<p style="text-align:center">
-					If you would like your total points to be saved and added to the leaderboard, enter a nickname and create/remember a personal keycode (6 digits) to update your total if you win again.
+					If you would like your total points to be saved and added to the leaderboard, enter a nickname and create/remember a personal keycode to update your total if you win again.
 				</p>
 
 				<ion-item>
 					<ion-label>nickname</ion-label>
-					<ion-input id="nick" placeholder="nickname"></ion-input>
+					<ion-input id="nick" placeholder="john"></ion-input>
+				</ion-item>
+
+				<ion-item>
+					<ion-label>keycode</ion-label>
+					<ion-input id="code" placeholder="123456"></ion-input>
 				</ion-item>
 				<ion-button expand="block" onclick="submit()">submit</ion-button>
 			</ion-content>
@@ -67,7 +72,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
 		<script>
 			function submit() {
-				window.location.replace('/add-points?nick=' + document.getElementById('nick').value + '&points=' + <%= points %>);
+				window.location.replace('/add-points?nick=' + document.getElementById('nick').value + '&points=' + <%= points %> + '&code=' + document.getElementById('code').value);
 			}
 		</script>
 	</body>
