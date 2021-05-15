@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>xplorit</title>
+		<base href="/" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.png">
+		<link rel="icon" type="image/x-icon" href="/img/favicon.png">
+
+		<meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="xplorit" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/core.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/normalize.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/structure.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/typography.css" rel="stylesheet">
+		<link href="css/variables.css" rel="stylesheet">
+
+		<style>
+			.compass {
+				position: relative;
+				height: 80vmin;
+				width: 80vmin;
+				margin: 3% auto
+			}
+
+			.compass>img {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				height: 80vmin;
+				width: 80vmin;
+				transition: transform .1s ease-out
+			}
+			</style>
+	</head>
+
+	<body>
+		<ion-app>
+			<ion-header translucent>
+				<ion-toolbar>
+					<ion-title>Follow the compass!</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
+			<ion-content fullscreen>
+				<ion-header collapse="condense">
+					<ion-toolbar>
+						<ion-title size="large">Follow the compass!</ion-title>
+					</ion-toolbar>
+				</ion-header>
+
+				<ion-button expand="block" id="compass_button" onclick="toggle_compass()">show compass</ion-button>
+				<div id="holder" class="compass" hidden>
+					<img id="spinny" src="/img/compass.png" />
+					<img src="/img/arrow.png" style="z-index: 2"/>
+					<img id="needle" src="/img/needle.png" style="z-index: 3"/>
+				</div>
+				<ion-button id="help_button" onclick="help()" hidden>help</ion-button>
+			</ion-content>
+
+			<ion-footer>
+				<ion-grid>
+					<ion-row>
+						<ion-col>
+							<ion-button expand="block" onclick="window.location.replace('/')">main menu</ion-button>
+						</ion-col>
+						<ion-col>
+							<h2 id="distance" style="text-align:center">1000 m</h2>
+						</ion-col>
+						<ion-col>
+							<h2 id="time" style="text-align:center">0:00</h2>
+						</ion-col>
+					</ion-row>
+				</ion-grid>
+			</ion-footer>
+		</ion-app>
+		<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			const target = { longitude: parseFloat(<%= target.longitude %>), latitude: parseFloat(<%= target.latitude %>) };
+			var socket = io();
+			let tracked_angle = 0;
+			let compass_rotation;
+			let distance_label = document.getElementById("distance");
+			let time_label = document.getElementById("time");
+			let compass_holder = document.getElementById("holder");
+			let compass_circle = document.getElementById("spinny");
+			let compass_needle = document.getElementById("needle");
+			let help_button = document.getElementById("help_button");
+			socket.emit("join room", { session_id: '<%= session_id %>' });
+
+			function help() {
+				alert("The faster you reach your secret destination the more points you will receive! The more points you have the higher up you will be on the leaderboards. Stay safe and have fun!");
+			}
+
+			const deg2rad = Math.PI / 180;
+	
+			function distance(start, dest) { //meters
+				const dLat = (dest.latitude - start.latitude) * deg2rad;
+				const dLon = (dest.longitude - start.longitude) * deg2rad;
+				const lat1 = start.latitude * deg2rad;
+				const lat2 = dest.latitude * deg2rad;
+				const a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+				return (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))) * 6371008.8;
+			}
+	
+			function bearing(start, dest) {
+				function rad2deg(radians) {
+					const degrees = radians % (2 * Math.PI);
+					return (degrees * 180) / Math.PI;
+				}
+				const lon1 = start.longitude * deg2rad;
+				const lon2 = dest.longitude * deg2rad;
+				const lat1 = start.latitude * deg2rad;
+				const lat2 = dest.latitude * deg2rad;
+				const a = Math.sin(lon2 - lon1) * Math.cos(lat2);
+				const b = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+				const c = rad2deg(Math.atan2(a, b));
+				return (c + 180) % 360;
+			}
+	
+			socket.on("victory", ({ points }) => window.location.replace("/victory?points=" + points));
+			socket.on("lost", () => window.location.replace("/lost.html"));
+	
+			function compass_handler(e) {
+				let compass = e.webkitCompassHeading || Math.abs(e.alpha - 360);
+				compass_rotation = compass_rotation || 0;
+				let aR = compass_rotation % 360;
+				if (aR < 0)
+					aR += 360;
+				if (aR < 180 && compass > aR + 180)
+					compass_rotation -= 360;
+				if (aR >= 180 && compass <= aR - 180)
+					compass_rotation += 360;
+				compass_rotation += (compass - aR);
+				compass_circle.style.transform = `rotate(${-compass_rotation}deg)`;
+				compass_needle.style.transform = `rotate(${-(compass_rotation - tracked_angle)}deg)`;
+			}
+	
+			function toggle_compass() {
+				document.getElementById("compass_button").remove();
+				if (navigator.userAgent.match(/(iPod|iPhone|iPad)/) && navigator.userAgent.match(/AppleWebKit/)) {
+					DeviceOrientationEvent.requestPermission().then((response) => {
+						if (response === "granted")
+							window.addEventListener("deviceorientation", compass_handler, true);
+						else
+							alert("has to be allowed!");
+					}).catch(() => alert("not supported"));
+				} else
+					window.addEventListener("deviceorientationabsolute", compass_handler, true);
+				compass_holder.hidden = !compass_holder.hidden;
+				help_button.hidden = !help_button.hidden;
+			}
+	
+			socket.on("time update", ({ time }) => {
+				time_label.innerHTML = Math.floor(time / 60) + ":" + (Math.floor(time % 60) < 10 ? "0" : "") + Math.floor(time % 60);
+			});
+	
+			socket.on("join acknowledgement", (data) => {
+				navigator.geolocation.watchPosition(
+					({ coords }) => {
+						socket.emit("position update", { longitude: coords.longitude, latitude: coords.latitude });
+						tracked_angle = bearing(coords, target).toFixed();
+						compass_needle.style.transform = `rotate(${-(compass_rotation - tracked_angle)}deg)`;
+						distance_label.innerHTML = distance(coords, target).toFixed() + " m";
+					},
+					() => { },
+					{ enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+				);
+			});
+		</script>
+	</body>
+</html>

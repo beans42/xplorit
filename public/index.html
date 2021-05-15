@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>xplorit</title>
+		<base href="/" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.png">
+		<link rel="icon" type="image/x-icon" href="/img/favicon.png">
+
+		<meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="xplorit" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/core.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/normalize.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/structure.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/typography.css" rel="stylesheet">
+		<link href="css/variables.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<ion-app>
+			<ion-header translucent>
+				<ion-toolbar>
+					<ion-title>xplorit</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			
+			<ion-content fullscreen>
+				<ion-header collapse="condense">
+					<ion-toolbar>
+						<ion-title size="large">xplorit</ion-title>
+					</ion-toolbar>
+				</ion-header>
+				
+				<img class="logo" style="display: block; margin: 5% auto 5% auto; width: 50vmin" src="/img/logo_big.png"/>
+
+				<ion-label class="ion-text-center">
+					<ion-text>
+						<h1>How far are you willing to go? (km)</h3>
+					</ion-text>
+				</ion-label>
+				<ion-range id="distance" min=0.5 max=5 step=0.5 snaps pin></ion-range>
+			
+				<ion-label class="ion-text-center">
+					<ion-text>
+						<h1>Set a time limit (minutes).</h3>
+					</ion-text>
+				</ion-label>
+				<ion-range id="time" min=5 max=60 step=5 snaps pin></ion-range>
+			
+				<ion-button expand="block" onclick="send()">continue</ion-button>
+				<ion-button onclick="window.location.replace('/leaderboard')">leaderboards</ion-button>
+			</ion-content>
+		</ion-app>
+		
+		<script>
+			function send() {
+				if (navigator.geolocation)
+					navigator.geolocation.getCurrentPosition(actually_send);
+				else
+					alert("Geolocation is not supported by this browser.");
+			}
+			function actually_send(position) {
+				window.location.replace('/create-room/?radius=' + document.getElementById('distance').value + '&time=' + document.getElementById('time').value + '&latitude=' + position.coords.latitude + '&longitude=' + position.coords.longitude);
+			}
+		</script>
+	</body>
+	<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>xplorit</title>
+		<base href="/" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="msapplication-tap-highlight" content="no" />
+
+		<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.png">
+		<link rel="icon" type="image/x-icon" href="/img/favicon.png">
+
+		<meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="xplorit" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/core.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/normalize.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/structure.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/css/typography.css" rel="stylesheet">
+		<link href="css/variables.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<ion-app>
+			<ion-header translucent>
+				<ion-toolbar>
+					<ion-title>Success</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
+			<ion-content fullscreen>
+				<ion-header collapse="condense">
+					<ion-toolbar>
+						<ion-title size="large">Success</ion-title>
+					</ion-toolbar>
+				</ion-header>
+
+				<ion-text color="success">
+					<h1 style="text-align:center">Congratulations!</h1>
+				</ion-text>
+
+				<ion-text>
+					<h5 style="text-align:center">You have reached the secret destination!</h5>
+				</ion-text>
+
+				<ion-text color="secondary">
+					<h1 style="text-align:center"><%= points %> points</h1>
+				</ion-text>
+
+				<p style="text-align:center">
+					If you would like your total points to be saved and added to the leaderboard, enter a nickname and create/remember a personal keycode (6 digits) to update your total if you win again.
+				</p>
+
+				<ion-item>
+					<ion-label>nickname</ion-label>
+					<ion-input id="nick" placeholder="nickname"></ion-input>
+				</ion-item>
+				<ion-button expand="block" onclick="submit()">submit</ion-button>
+			</ion-content>
+		</ion-app>
+		<script src="https://cdn.jsdelivr.net/npm/@ionic/core@5.6.7/dist/ionic/ionic.js"></script>
+		<script>
+			function submit() {
+				window.location.replace('/add-points?nick=' + document.getElementById('nick').value + '&points=' + <%= points %>);
+			}
+		</script>
+	</body>
+</html>
