@@ -15,7 +15,18 @@ const server = https.createServer(ssl_options, app);
 const io = socket(server);
 
 let session_map = new Map();
-let leaderboards = [];
+let leaderboards = [
+	{ nick: 'Ebrahim', points: 6543, code: '356218' },
+	{ nick: 'Dhruv', points: 5842, code: '356218' },
+	{ nick: 'Sahil', points: 4953, code: '356218' },
+	{ nick: 'Mohid', points: 4453, code: '356218' },
+	{ nick: 'Jennifer', points: 3943, code: '356218' },
+	{ nick: 'Sarah', points: 2330, code: '356218' },
+	{ nick: 'Oliver', points: 1225, code: '356218' },
+	{ nick: 'Andrei', points: 964, code: '356218' },
+	{ nick: 'Andrei', points: 658, code: '356218' },
+	{ nick: 'Leo', points: 523, code: '356218' }
+];
 
 app.get('/session/:session_id', (req, res) => {
 	const session_id = req.params['session_id'];
