@@ -1,6 +1,6 @@
 # xplorit
 
-NOTE: This project was developed as part of [turnerhacks 2021]([https://turnerhacks2021.devpost.com/](https://devpost.com/software/xplorit).
+NOTE: This project was developed as part of [turnerhacks 2021](https://devpost.com/software/xplorit).
 
 xplorit is a fun [geocaching-like](https://en.wikipedia.org/wiki/Geocaching) game designed to promote exploration and exercise.
 
