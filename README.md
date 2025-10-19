@@ -4,6 +4,12 @@ NOTE: This project was developed as part of [turnerhacks 2021](https://devpost.c
 
 xplorit is a fun [geocaching-like](https://en.wikipedia.org/wiki/Geocaching) game designed to promote exploration and exercise.
 
+
+## Demo
+
+Click the below image to see a video demo of xplorit in use.
+[![xplorit demo](https://raw.githubusercontent.com/beans42/xplorit/refs/heads/master/thumbnail.png)](https://www.youtube.com/watch?v=w28d4se20ic&t=145 "xplorit demo")
+
 ## Usage
 
 First, ensure that ssl/privkey.pem, and ssl/fullchain.pem files are present (you can use [letsencrypt](https://letsencrypt.org/) for free ssl certs).
